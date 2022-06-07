@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    alicloud:
+      access-key: LTAI5tHP7fX71ZpFiyx4bw69
+      secret-key: 4N0qRDrFLdDbvYWOPaI4Soc6CDTOKG
+      oss:
+        endpoint: oss-cn-guangzhou.aliyuncs.com
+        bucket: gulimall-doomwatcher
