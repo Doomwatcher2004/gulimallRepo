@@ -7,8 +7,11 @@ import com.hyc.common.utils.PageUtils;
 import com.hyc.common.utils.Query;
 import com.hyc.gulimall.product.dao.CategoryDao;
 import com.hyc.gulimall.product.entity.CategoryEntity;
+import com.hyc.gulimall.product.service.CategoryBrandRelationService;
 import com.hyc.gulimall.product.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +22,9 @@ import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -71,6 +77,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Collections.reverse(parentPath);
         return parentPath.toArray(new Long[parentPath.size()]);
     }
+
+    /**
+     * @author 冷环渊 Doomwatcher
+     * @context: 级联更新所有需要关联的数据
+     * @date: 2022/6/9 19:02
+     * @param category
+     * @return: void
+     */
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+    }
+
 
     private List<Long> findParentPath(Long catelogId, List<Long> paths) {
         //    收集当前节点的id

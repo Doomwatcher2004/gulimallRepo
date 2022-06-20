@@ -1,22 +1,21 @@
-package com.hyc.gulimall.product.entity;
+package com.hyc.gulimall.product.vo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 
 /**
- * 商品属性
- *
- * @author lenghuanyuan
- * @email 3132774018@qq.com
- * @date 2022-05-22 16:21:49
+ * @projectName: gulimall
+ * @package: com.hyc.gulimall.product.vo
+ * @className: AttrVo
+ * @author: 冷环渊 doomwatcher
+ * @description: TODO
+ * @date: 2022/6/9 19:18
+ * @version: 1.0
  */
 @Data
-@TableName("pms_attr")
-public class AttrEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class AttrVo {
 
     /**
      * 属性id
@@ -55,6 +54,9 @@ public class AttrEntity implements Serializable {
      * 快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整
      */
     private Integer showDesc;
+
+    @NotNull(message = "修改必须携带id")
+    private Long attrGroupId;
 
     private Integer valueType;
 }
