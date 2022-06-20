@@ -4,6 +4,7 @@ import com.hyc.common.utils.PageUtils;
 import com.hyc.common.utils.R;
 import com.hyc.gulimall.product.entity.AttrEntity;
 import com.hyc.gulimall.product.entity.AttrGroupEntity;
+import com.hyc.gulimall.product.service.AttrAttrgroupRelationService;
 import com.hyc.gulimall.product.service.AttrGroupService;
 import com.hyc.gulimall.product.service.AttrService;
 import com.hyc.gulimall.product.service.CategoryService;
@@ -34,6 +35,16 @@ public class AttrGroupController {
     @Autowired
     AttrService attrService;
 
+    @Autowired
+    AttrAttrgroupRelationService relationService;
+
+    ///product/attrgroup/attr/relation
+    @PostMapping(value = "attr/relation")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos) {
+        relationService.saveBatch(vos);
+        return R.ok();
+    }
+
     ///product/attrgroup/attr/relation/delete
     @PostMapping(value = "attr/relation/delete")
     public R DelRelation(@RequestBody AttrGroupRelationVo[] vos) {
@@ -53,6 +64,29 @@ public class AttrGroupController {
     public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId) {
         List<AttrEntity> entities = attrService.getRelationAttr(attrgroupId);
         return R.ok().put("data", entities);
+    }
+
+    /**
+     * @author 冷环渊 Doomwatcher
+     * @context: 获取属性分组里面还没有关联的本分类里面的其他基本属性，方便添加新的关联
+     * 响应描述
+     * {
+     *    page: 1,//当前页码
+     *    limit: 10,//每页记录数
+     *    sidx: 'id',//排序字段
+     *    order: 'asc/desc',//排序方式
+     *    key: '华为'//检索关键字
+     * }
+     * @date: 2022/6/20 15:19
+     * @param attrgroupId
+     * @param params
+     * @return: com.hyc.common.utils.R
+     */
+    ///product/attrgroup/{attrgroupId}/noattr/relation
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R attrNoRelation(@PathVariable("attrgroupId") Long attrgroupId, @RequestParam Map<String, Object> params) {
+        PageUtils page = attrService.getNoRelationAttr(attrgroupId, params);
+        return R.ok().put("page", page);
     }
 
     /**

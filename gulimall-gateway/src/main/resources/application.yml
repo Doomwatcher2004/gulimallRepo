@@ -16,13 +16,14 @@ spring:
           predicates:
             - Query=url,qq
 
+        #商品路由
         - id: product_route
           uri: lb://gulimall-product
           predicates:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
-
+        #第三方接口调用服务路由
         - id: third_party_route
           uri: lb://gulimall-third-party
           predicates:
@@ -30,7 +31,16 @@ spring:
           filters:
             - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
 
+        #会员服务路由
+        - id: member_route
+          uri: lb://gulimall-member
+          #前端项目 请求都带上api前缀
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        #后台管理系统路由
         - id: admin_route
           uri: lb://renren-fast
           #前端项目 请求都带上api前缀
