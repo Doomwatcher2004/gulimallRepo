@@ -12,11 +12,14 @@ import com.hyc.gulimall.product.dao.CategoryDao;
 import com.hyc.gulimall.product.entity.BrandEntity;
 import com.hyc.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.hyc.gulimall.product.entity.CategoryEntity;
+import com.hyc.gulimall.product.service.BrandService;
 import com.hyc.gulimall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("categoryBrandRelationService")
@@ -27,7 +30,11 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     @Autowired
     CategoryDao categoryDao;
 
+    @Autowired
+    BrandService brandService;
+
     @Override
+
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<CategoryBrandRelationEntity> page = this.page(
                 new Query<CategoryBrandRelationEntity>().getPage(params),
@@ -71,6 +78,25 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     @Override
     public void updateCategory(Long catId, String name) {
         this.baseMapper.updateCategory(catId, name);
+    }
+
+    /**
+     * @author 冷环渊 Doomwatcher
+     * @context: 根据分类id 获取到关联的品牌 关联表只能获取到名字和id 于是我们通过id继续获取全部信息 以备不时之需
+     * @date: 2022/7/4 18:03
+     * @param catId
+     * @return: java.util.List<com.hyc.gulimall.product.entity.BrandEntity>
+     */
+    @Override
+    public List<BrandEntity> getBrandsByCatId(Long catId) {
+
+        List<CategoryBrandRelationEntity> relationList = this.baseMapper.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+        List<BrandEntity> collect = relationList.stream().map(item -> {
+            Long brandId = item.getBrandId();
+            BrandEntity entity = brandService.getById(brandId);
+            return entity;
+        }).collect(Collectors.toList());
+        return collect;
     }
 
 }

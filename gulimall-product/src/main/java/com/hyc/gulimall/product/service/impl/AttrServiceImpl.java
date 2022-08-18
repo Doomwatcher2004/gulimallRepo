@@ -95,11 +95,12 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
     @Override
     public PageUtils queryBaseAttrPage(Map<String, Object> params, Long categoryId, String type) {
         QueryWrapper<AttrEntity> attrEntityQueryWrapper = new QueryWrapper<AttrEntity>().eq("attr_type", "base".equalsIgnoreCase(type) ? ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode() : ProductConstant.AttrEnum.ATTR_TYPE_SALE.getCode());
+
         if (categoryId != 0) {
             attrEntityQueryWrapper.eq("catelog_id", categoryId);
         }
         String key = (String) params.get("key");
-        if (StringUtils.isEmpty(key)) {
+        if (!StringUtils.isEmpty(key)) {
             attrEntityQueryWrapper.and((wapper) -> {
                 wapper.eq("attr_id", key).or().like("attr_name", key);
             });
@@ -144,20 +145,20 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         AttrRespVo attrRespVo = new AttrRespVo();
         AttrEntity attrEntity = this.getById(attrId);
         BeanUtils.copyProperties(attrEntity, attrRespVo);
-        //判断类型
+        //判断类型 如果是基础参数就设置分组信息
         if (attrEntity.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()) {
-            //1. 设置分组信息
+            //1. 拼装分组信息
             AttrAttrgroupRelationEntity attrgrouprelation = relationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrId));
             if (attrgrouprelation != null) {
                 attrRespVo.setAttrGroupId(attrgrouprelation.getAttrGroupId());
-                //设置分组名
+                //拼装分组名
                 AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrgrouprelation.getAttrGroupId());
                 if (attrGroupEntity != null) {
                     attrRespVo.setGroupName(attrGroupEntity.getAttrGroupName());
                 }
             }
         }
-        //    2.设置分类信息
+        //    2.拼装分类信息
         Long catelogId = attrEntity.getCatelogId();
         Long[] catelogPath = categoryService.findCatelogPath(catelogId);
         if (catelogPath != null) {
@@ -170,7 +171,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     /**
      * @author 冷环渊 Doomwatcher
-     * @context: 修改属性 同样是根绝判断 规格参数/销售书信 来分别处理
+     * @context: 修改属性 同样是根绝判断 规格参数/销售属性 来分别处理
      * 1. 规格参数 才需要修改分组关联
      * 2. 销售参数不需要添加分组 所以只需要操作attr 表即可
      * @date: 2022/6/17 16:33

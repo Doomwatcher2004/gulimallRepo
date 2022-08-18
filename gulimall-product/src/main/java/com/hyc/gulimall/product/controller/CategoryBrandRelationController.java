@@ -3,14 +3,17 @@ package com.hyc.gulimall.product.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hyc.common.utils.PageUtils;
 import com.hyc.common.utils.R;
+import com.hyc.gulimall.product.entity.BrandEntity;
 import com.hyc.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.hyc.gulimall.product.service.CategoryBrandRelationService;
+import com.hyc.gulimall.product.vo.BrandVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -34,6 +37,23 @@ public class CategoryBrandRelationController {
     public R cateloglist(@RequestParam("brandId") Long brandId) {
         List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id", brandId));
         return R.ok().put("data", data);
+    }
+
+    /**
+     * /product/categorybrandrelation/brands/list
+     * 获取分类关联的品牌
+     * */
+    @GetMapping(value = "/brands/list")
+    public R Relationbrandslist(@RequestParam(value = "catId", required = true) Long catId) {
+
+        List<BrandEntity> vos = categoryBrandRelationService.getBrandsByCatId(catId);
+        List<BrandVo> collect = vos.stream().map((item) -> {
+            BrandVo brandVo = new BrandVo();
+            brandVo.setBrandId(item.getBrandId());
+            brandVo.setBrandName(item.getName());
+            return brandVo;
+        }).collect(Collectors.toList());
+        return R.ok().put("data", collect);
     }
 
     /**
