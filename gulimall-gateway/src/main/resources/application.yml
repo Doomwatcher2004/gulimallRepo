@@ -40,6 +40,14 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        #仓库库存服务路由
+        - id: ware_route
+          uri: lb://gulimall-ware
+          #前端项目 请求都带上api前缀
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
         #后台管理系统路由
         - id: admin_route
           uri: lb://renren-fast

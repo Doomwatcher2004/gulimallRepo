@@ -6,6 +6,7 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hyc.gulimall.product.entity.BrandEntity;
+import com.hyc.gulimall.product.service.AttrService;
 import com.hyc.gulimall.product.service.BrandService;
 import com.hyc.gulimall.product.service.CategoryService;
 import org.junit.Test;
@@ -31,6 +32,9 @@ public class GulimallProductApplicationTests {
     CategoryService categoryService;
     @Autowired
     OSSClient ossClient;
+
+    @Autowired
+    AttrService attrService;
 
     @Test
     public void findParentPath() {
@@ -92,5 +96,12 @@ public class GulimallProductApplicationTests {
                 System.out.println("上传完成");
             }
         }
+    }
+
+    @Test
+    public void selectSearchAttrs() {
+        Long[] ids = {8L, 13L, 14L, 7L, 15L, 16L};
+        List<Long> longs = attrService.selectSearchAttrs(Arrays.asList(ids));
+        System.out.println(longs);
     }
 }

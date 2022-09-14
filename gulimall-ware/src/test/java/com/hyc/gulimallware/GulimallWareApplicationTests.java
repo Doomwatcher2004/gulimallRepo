@@ -1,14 +1,20 @@
 package com.hyc.gulimallware;
 
 
+import com.hyc.gulimall.ware.dao.PurchaseDetailDao;
 import org.junit.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest
-class GulimallWareApplicationTests {
+@RunWith(SpringRunner.class)
+public class GulimallWareApplicationTests {
+    @Autowired
+    PurchaseDetailDao purchaseDetailDao;
 
     @Test
-    void contextLoads() {
+    public void contextLoads() {
+     
     }
 
 }

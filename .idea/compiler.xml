@@ -12,6 +12,7 @@
         <module name="gulimall-common" />
         <module name="renren-fast" />
         <module name="gulimall-order" />
+        <module name="gulimall-search" />
         <module name="gulimall-gateway" />
         <module name="gulimall-member" />
         <module name="gulimall-ware" />
@@ -27,6 +28,7 @@
       <module name="gulimall-member" target="11" />
       <module name="gulimall-order" target="11" />
       <module name="gulimall-product" target="11" />
+      <module name="gulimall-search" target="11" />
       <module name="gulimall-third-party" target="11" />
       <module name="gulimall-thrid-party" target="11" />
       <module name="gulimall-ware" target="11" />
@@ -41,6 +43,7 @@
       <module name="gulimall-member" options="-parameters" />
       <module name="gulimall-order" options="-parameters" />
       <module name="gulimall-product" options="-parameters" />
+      <module name="gulimall-search" options="-parameters" />
       <module name="gulimall-third-party" options="-parameters" />
       <module name="gulimall-thrid-party" options="-parameters" />
       <module name="gulimall-ware" options="-parameters" />

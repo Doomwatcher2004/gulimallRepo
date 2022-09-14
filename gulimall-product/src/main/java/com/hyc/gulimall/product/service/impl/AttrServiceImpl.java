@@ -281,6 +281,28 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return pageUtils;
     }
 
+    /**
+     * @author 冷环渊 Doomwatcher
+     * @context: 在指定的所有属性集合里，挑出检索属性为 1的对象
+     * @date: 2022/9/15 0:22
+     * @param attrids
+     * @return: java.util.List<java.lang.Long>
+     */
+    @Override
+    public List<Long> selectSearchAttrs(List<Long> attrids) {
+        List<AttrEntity> entities = this.baseMapper.selectBatchIds(attrids);
+        List<Long> collect = null;
+        if (attrids != null) {
+            collect = entities.stream().map(attr -> {
+                if (attr.getSearchType() == 1) {
+                    return attr.getAttrId();
+                }
+                return null;
+            }).collect(Collectors.toList());
+        }
+        return collect;
+    }
+
 
 }
 

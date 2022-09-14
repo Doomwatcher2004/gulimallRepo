@@ -3,7 +3,7 @@
 
 <mapper namespace="com.hyc.gulimall.ware.dao.PurchaseDetailDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.hyc.gulimall.ware.entity.PurchaseDetailEntity" id="purchaseDetailMap">
         <result property="id" column="id"/>
         <result property="purchaseId" column="purchase_id"/>
@@ -13,6 +13,11 @@
         <result property="wareId" column="ware_id"/>
         <result property="status" column="status"/>
     </resultMap>
+    <update id="updatePurchaseDetailStatus">
+        update gulimall_wms.wms_purchase_detail
+        set status = #{Status}
+        where purchase_id = #{id}
 
+    </update>
 
 </mapper>

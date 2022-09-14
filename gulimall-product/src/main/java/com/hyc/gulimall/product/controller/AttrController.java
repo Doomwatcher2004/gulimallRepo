@@ -2,13 +2,16 @@ package com.hyc.gulimall.product.controller;
 
 import com.hyc.common.utils.PageUtils;
 import com.hyc.common.utils.R;
+import com.hyc.gulimall.product.entity.ProductAttrValueEntity;
 import com.hyc.gulimall.product.service.AttrService;
+import com.hyc.gulimall.product.service.ProductAttrValueService;
 import com.hyc.gulimall.product.vo.AttrRespVo;
 import com.hyc.gulimall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,6 +27,15 @@ import java.util.Map;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+    @Autowired
+    ProductAttrValueService productAttrValueService;
+
+    ///product/attr/base/listforspu/{spuId}
+    @GetMapping(value = "/base/listforspu/{spuId}")
+    public R baseAttrList(@PathVariable("spuId") Long spuId) {
+        List<ProductAttrValueEntity> list = productAttrValueService.baseAttrlistforspu(spuId);
+        return R.ok().put("data", list);
+    }
 
     ///product/attr/base/list/{catelogId}
     @GetMapping("{attrtype}/list/{catelogId}")
@@ -73,6 +85,21 @@ public class AttrController {
     public R update(@RequestBody AttrVo attr) {
         attrService.updateAttr(attr);
         //attrService.updateById(attr);
+        return R.ok();
+    }
+
+    /**
+     * @author 冷环渊 Doomwatcher
+     * @context: 修改规格参数
+     * @date: 2022/9/4 21:43
+     * @param spuid
+     * @param entities
+     * @return: com.hyc.common.utils.R
+     */
+    @PostMapping("/update/{spuId}")
+    //@RequiresPermissions("product:attr:update")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuid, @RequestBody List<ProductAttrValueEntity> entities) {
+        productAttrValueService.updateSpuAttr(spuid, entities);
         return R.ok();
     }
 
